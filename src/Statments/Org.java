@@ -42,7 +42,7 @@ public class Org implements IStatement {
 
     @Override
     public boolean isValid(String query) {
-        
+
         this.query = query;
         Pattern pat;
         Matcher ma;
@@ -60,6 +60,12 @@ public class Org implements IStatement {
         if (!ma.find())
             return false;
         String opran = query.substring(17, query.length() > 35 ? 35 : query.length());
+        Star star=new Star();
+        if (star.isValid(opran)) {
+            address.add(star.address);
+            addressType.add("num");
+            return true;
+        }
         pat = Pattern.compile(operand);
         ma = pat.matcher(opran);
         if (ma.matches()) {
@@ -71,7 +77,7 @@ public class Org implements IStatement {
                     else
                         addressType.add("hex");
                 }
-            reset=false;
+            reset = false;
             return true;
         } else if (opran.trim().length() == 0) {
             // we should reset PC .

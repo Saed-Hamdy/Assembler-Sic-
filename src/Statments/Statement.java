@@ -60,7 +60,12 @@ public class Statement implements IStatement {
             addressType="Litral";
             return liter.isValid(opran);
         }else {
-            
+            Star star=new Star();
+            if (star.isValid(opran)) {
+                address=Integer.toHexString(Integer.parseInt(star.address));
+                addressType=("hex");
+                return true;
+            }
             pat = Pattern.compile(oprand);
             ma = pat.matcher(opran);
             if (ma.matches()) {

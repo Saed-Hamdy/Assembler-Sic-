@@ -23,12 +23,14 @@ public class Equ implements IStatement {
     private String addressRgx = "([a-z](\\w+)?)";
     private String oneOprand = "(" + addressRgx + "|" + Num + ")";
     private String operand = "^(?i)(" + oneOprand + "(\\s*[+-]\\s*" + oneOprand + ")?)\\s*$";
+    private Star star;
 
     public Equ() {
         address = new ArrayList<>();
         addressType = new ArrayList<>();
         sympol = "";
         pass2 = false;
+        star = new Star();
     }
 
     @Override
@@ -50,19 +52,25 @@ public class Equ implements IStatement {
             return false;
 
         String opran = query.substring(17, query.length() > 35 ? 35 : query.length()).trim().toLowerCase();
-        pat = Pattern.compile(operand);
-        ma = pat.matcher(opran);
-        if (ma.matches()) {
-            if (!setOperation("+", opran))
-                if (!setOperation("-", opran)) {
-                    address.add(opran.trim());
-                    if (Character.isAlphabetic(oper.charAt(0)))
-                        addressType.add("Label");
-                    else
-                        addressType.add("hex");
-                }
-
+        if (star.isValid(opran)) {
+            address.add(star.address);
+            addressType.add("num");
             return true;
+        } else {
+            pat = Pattern.compile(operand);
+            ma = pat.matcher(opran);
+            if (ma.matches()) {
+                if (!setOperation("+", opran))
+                    if (!setOperation("-", opran)) {
+                        address.add(opran.trim());
+                        if (Character.isAlphabetic(oper.charAt(0)))
+                            addressType.add("Label");
+                        else
+                            addressType.add("num");
+                    }
+
+                return true;
+            }
         }
         return false;
     }
@@ -78,7 +86,7 @@ public class Equ implements IStatement {
                 if (ma.matches()) {
                     addressType.add("Label");
                 } else {
-                    addressType.add("hex");
+                    addressType.add("num");
                 }
             }
             return true;
