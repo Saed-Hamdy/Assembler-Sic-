@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Pass2 {
     private static Pass2 instance;
-    private static String oneTxtRecord, programName;
+    private static String oneTxtRecord, programName, endRecord;
     private static Integer startAdress;
     private static Integer txtRecordLength;
     private static List<String> output, listcode;
@@ -32,11 +32,11 @@ public class Pass2 {
     }
 
     public static void addToListFile(String line) {
-        String pcCnt=StartingAddressFieldformat(Integer.toHexString(Controller.programCounter));
+        String pcCnt = StartingAddressFieldformat(Integer.toHexString(Controller.programCounter));
         if (isComment)
-            pcCnt="      ";
-            
-        listcode.add(pcCnt.substring(2)+"    " + line);
+            pcCnt = "      ";
+
+        listcode.add(pcCnt.substring(2) + "    " + line);
     }
 
     public static void writeFiles() {
@@ -49,9 +49,9 @@ public class Pass2 {
         try {
             File file = new File(fileName);
             if (file.createNewFile()) {
-                System.out.println("File is created!");
+                System.out.println(fileName+" has been created!");
             } else {
-                System.out.println("File already exists will be overwritten");
+                System.out.println(fileName+" already exists will be overwritten");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -121,11 +121,13 @@ public class Pass2 {
     }
 
     public static String EndInstruction(String operand) {
-        output.add("T" + separator + StartingAddressFieldformat(Integer.toHexString(startAdress)) + separator
-                + Integer.toHexString(txtRecordLength) + oneTxtRecord);
+        // output.add("T" + separator +
+        // StartingAddressFieldformat(Integer.toHexString(startAdress)) +
+        // separator
+        // + Integer.toHexString(txtRecordLength) + oneTxtRecord);
         operand = StartingAddressFieldformat(operand);
-        String content = "E" + separator + operand;
-        output.add(content);
+        endRecord = "E" + separator + operand;
+        // output.add(content);
         return "    ";
     }
 
@@ -198,8 +200,8 @@ public class Pass2 {
 
     public static String byteMethod(String value, boolean ischaracter) {
         if (!ischaracter) {
-            if (value.length()%2==1)
-                return addToRecord("0"+value);     
+            if (value.length() % 2 == 1)
+                return addToRecord("0" + value);
             return addToRecord(value);
         } else {
             String w = "";
@@ -211,4 +213,9 @@ public class Pass2 {
         }
     }
 
+    public static void addEndRecord() {
+        output.add("T" + separator + StartingAddressFieldformat(Integer.toHexString(startAdress)) + separator
+                + Integer.toHexString(txtRecordLength) + oneTxtRecord);
+        output.add(endRecord);
+    }
 }

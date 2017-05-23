@@ -61,19 +61,21 @@ public class Ltorg implements IStatement {
         if (query != null)
             Pass2.addToListFile("\n" + query);
         if (!list.get(counter).isEmpty())
-            Pass2.addToListFile(" .\t\t Some Literals added Here ");
+            Pass2.addToListFile(".\t\t Some Literals added Here ");
         Pass2.isComment = false;
         for (String s : list.get(counter)) {
             String str;
+            int size;
             if ((s.charAt(0) + "").equalsIgnoreCase("C")) {
-                Controller.programCounter += s.length() - 3;
                 str = Pass2.byteMethod(s.substring(2, s.length() - 1), true);
+                size = s.length() - 3;
 
             } else {
-                Controller.programCounter += (int) Math.ceil((s.length() - 3) / 2);
                 str = Pass2.byteMethod(s.substring(2, s.length() - 1), false);
+                size = (int) Math.ceil((s.length() - 3) / 2);
             }
-            Pass2.addToListFile(" .\t\t" + s + "\t writen in memory\t\t\t\t\t\t\t\t\t" + str.substring(1));
+            Pass2.addToListFile(".\t\t " + s + "\t writen in memory\t\t\t\t\t\t\t\t\t " + str.substring(1));
+            Controller.programCounter += size;
         }
         Pass2.isComment = true;
         Pass2.addToListFile("\n");
@@ -81,6 +83,11 @@ public class Ltorg implements IStatement {
         Pass2.isComment = false;
 
         return true;
+    }
+
+    public void addLastLiteral() {
+        executePass2();
+        Pass2.addEndRecord();
     }
 
 }

@@ -61,7 +61,7 @@ public class Controller {
         IStatement st = new StartStm();
         IStatement end = new End();
         IStatement comment = new Comment();
-        IStatement ltorg = new Ltorg();
+        Ltorg ltorg = new Ltorg();
         /**
          * pass1
          */
@@ -85,8 +85,10 @@ public class Controller {
             i++;
         }
         if (end.isValid(code.get(i))) {
-            ltorg.executePass1();
             end.executePass1();
+            System.out.println(Integer.toHexString(endLocation-startLocation));
+            ltorg.executePass1();
+            System.out.println(Integer.toHexString(programCounter-startLocation));
         }
         int x = unFinishedStatements.size();
         while (unFinishedStatements.size() > 0 && Pass1Error == false) {
@@ -110,7 +112,6 @@ public class Controller {
         /**
          * pass2
          */
-        endLocation = programCounter;
         programCounter = startLocation; // reset Program counter to execute
         // pass2
         i = 0;
@@ -134,8 +135,10 @@ public class Controller {
             i++;
         }
         if (end.isValid(code.get(i))) {
-            ltorg.executePass2();
             end.executePass2();
+            ltorg.addLastLiteral();
+            
         }
+        Pass2.writeFiles();
     }
 }

@@ -143,6 +143,7 @@ public class Org implements IStatement {
     @Override
     public Boolean executePass2() {
         Pass2.addToListFile(query);
+        Pass2.reserve();
         pass2 = true;
         return executePass1();
     }

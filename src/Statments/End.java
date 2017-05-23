@@ -99,7 +99,7 @@ public class End implements IStatement {
            
         }
         Pass2.addToListFile(query + "    ");
-        Pass2.writeFiles();
+        //Pass2.writeFiles();
 
         return true;
     }
